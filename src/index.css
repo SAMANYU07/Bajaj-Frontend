@@ -1,8 +1,41 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
-@tailwind utilities; */
+@tailwind utilities;
 
-:root {
+* {
+  padding: 0;
+  margin: 0;
+}
+
+#submitbtn {
+  position: relative;
+}
+
+#submitbtn:hover {
+}
+#submitbtn::after {
+  content: '';
+  /* background-color: aqua; */
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transition: 0.2s;
+  z-index: -1;
+}
+#submitbtn:hover::after {
+  width: 100%;
+}
+
+.smooth-height {
+  transition: height 0.5s ease;
+}
+.smooth-width {
+  transition: width 0.5s ease;
+}
+
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -69,4 +102,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
