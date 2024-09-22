@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useTransition, animated } from 'react-spring';
 
 import './App.css'
+import Loading from './Loading';
 
 function App() {
   const [apiInput, setApiInput] = useState("");
@@ -12,15 +13,23 @@ function App() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [jsonResponse, setJSONResponse] = useState([]);
   const [resData, setResData] = useState(null);
+  const [showLoading, setShowLoading] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const filterTransition = useTransition(showDropdown, {
+  const loadingTransition = useTransition(showLoading, {
+    from: {height: "0px"},
+    enter: {height: "10px"},
+    leave: {height: "0px"}
+  });
+
+  const filterTransition = useTransition(showDropdown && !showLoading, {
     from: {height: "0%"},
     enter: {height: "6 %"},
     leave: {height: "0%"},
   });
 
   const handleSubmit = async () => {
+    setShowLoading(true);
     try {
       let inpApi = JSON.parse(apiInput);
       let fileObje = {"file_b64":"BASE_64_STRING"};
@@ -32,11 +41,12 @@ function App() {
         }
       });
       console.log("Response from server:", res.data);
-      setResData(res.data)
       setShowDropdown(true);
+      setResData(res.data)
     } catch (error) {
       console.error("Error submitting data:", error);
     }
+    setShowLoading(false);
   }
   const handleDropdownChange = (event) => {
     setSelectedOption(event.target.value);
@@ -62,9 +72,17 @@ function App() {
       value={apiInput} onChange={event => setApiInput(event.target.value)}
       className='text-[28px] mt8 outline-none border-b-2 border-black rounded-md focus:border-b-violet-600 transition-[0.2s]'
       />
+      <div className='flex gap-x-4'>
+
       <button onClick={handleSubmit} id='submitbtn'
       className=' bg-violet-600 mt4 text-white w-[120px] h-[50px] transition-[0.2s] active:scale-95 hover:scale-105 rounded-lg after:rounded-lg after:bg-violet-800'
       >Submit</button>
+      {loadingTransition((style, show) =>
+      show?
+      <animated.div style={style}><Loading/></animated.div>
+      :null
+      )}
+      </div>
       {filterTransition((style, show) =>
       show ?
       <animated.div style={style}>
@@ -79,7 +97,7 @@ function App() {
       </animated.div>
       : null
       )}
-      <div className=' mt6 bg-white shadow-md rounded-md p-2 smooth-width smooth-height transition-[0.2s]'>
+      <div className=' mt6 bg-white shadow-md rounded-md p-2 smooth-width smooth-height transition-[0.2s] text-left'>
       {resData?.numbers.length && (selectedOption == "numbers" || selectedOption == "Show All") ? <p>Numbers: <span>{resData?.numbers?.map(no => <span key={no}>{no},</span>)}</span></p> : null}
           {resData?.alphabets.length && (selectedOption == "alphabets" || selectedOption == "Show All") != 0 ? <p>Alphabets: <span>{resData?.alphabets?.map(alpha => <span key={alpha}>{alpha},</span>)}</span></p> : null}
           {/* {resData?.highest_alphabet.length && (selectedOption == "highestAlpha" || selectedOption == "Show All") != 0 ? <p>Highest Alphabet: <span>{resData?.highest_alphabet}</span></p> : null} */}
