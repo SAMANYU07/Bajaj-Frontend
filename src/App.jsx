@@ -67,7 +67,7 @@ function App() {
       >Submit</button>
       {filterTransition((style, show) =>
       show ?
-      <animated.div>
+      <animated.div style={style}>
         <select name="" id="filterOption"  value={selectedOption} onChange={handleDropdownChange}
         className=' outline-none text-[20px] mt4 hover:bg-black hover:text-white transition-[0.2S]'
         >
