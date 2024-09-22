@@ -36,6 +36,7 @@ function App() {
     console.log(event.target.value);
   };
   useEffect(() => {
+    console.log("api: ", API_URL);
     axios.get(API_URL+"/api/bfhl")
       .then(data => {
         setJSONResponse(data.data);
